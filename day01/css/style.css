@@ -1,0 +1,15 @@
+ul{
+  display: flex;
+  justify-content: space-around;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+article img{
+  width: 100%;
+}
+
+article h1{
+  font-size: 5vw;
+}
