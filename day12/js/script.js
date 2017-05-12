@@ -64,7 +64,7 @@ function setVars(envs){
   myVars.set_img_url(envs.img_url);
   myVars.set_v3auth(envs.v3auth);
 
-  console.log(myVars.get_root_url(), myVars.get_img_url(), myVars.get_v3auth());
+  //console.log(myVars.get_root_url(), myVars.get_img_url(), myVars.get_v3auth());
 
   var test = 'https://api.themoviedb.org/3/movie/top_rated?api_key=6878886989b1485a2529a5c115745744&language=en-US&page=1';
 
@@ -76,8 +76,11 @@ function setVars(envs){
   }else{
     topRated(localStorage.getItem('topRated'));
   }
-
-  getReq(topRatedMovies, getMovies);
+  if(!localStorage.getItem('popularMovies')){
+    getReq(popularMovies, getMovies);
+  }else{
+    getMovies(localStorage.getItem('popularMovies'));
+  }
     /**
     *   CODE-ALONG:
     *       •We will write the process of setting all the credentials in class
@@ -106,13 +109,13 @@ function topRated(top){
 
   var randomMovie = Math.floor(Math.random()*top.results.length);
   var topMovie = top.results[randomMovie];
-  console.log(myVars.get_img_url(), topMovie.backdrop_path);
+  //console.log(myVars.get_img_url(), topMovie.backdrop_path);
 
   var featured = document.querySelector('.featured'),
       poster = document.querySelector('.featured .poster'),
       title = document.querySelector('.featured .title');
 
-  featured.style.backgroundImage = `url(${myVars.get_img_url()}original${topMovie.backdrop_path})`;
+  featured.style.backgroundImage = `linear-gradient(to right, hsla(0, 0%, 0%, .85) 35%, hsla(0, 0%, 0%, 0)),url(${myVars.get_img_url()}original${topMovie.backdrop_path})`;
   poster.src = `${myVars.get_img_url()}w342${topMovie.poster_path}`;
   title.innerHTML = `${topMovie.original_title}`;
     /**
@@ -129,15 +132,31 @@ function topRated(top){
 
 function getMovies(movies){
 
-    /*if(typeof movies === 'object' ){
+    if(typeof movies === 'object' ){
       localStorage.setItem('popularMovies', JSON.stringify(movies));
     }else if(typeof movies === 'string'){
-
-    }*/
-    console.log(movies);
+      movies = JSON.parse(movies);
+    }
     var swiper = document.querySelector('.swiper-wrapper');
     swiper.innerHTML= "";
 
+    for(let i = 0; i < movies.results.length; i++){
+      var movieFigure = document.createElement('figure');
+      movieFigure.innerHTML = `<figcaption>
+            <div class="thumbMeta">
+                <h1>${movies.results[i].original_title}</h1>
+                <div><progress max="100" value="80"></progress> <span>23 of 151m</span></div>
+            </div>
+            <div class="thumbRate">
+                <button><i class="fa fa-thumbs-o-up"></i></button> <button><i class="fa fa-thumbs-o-down"></i></button> <button><i class="fa fa-plus"></i></button>
+            </div>
+            </figcaption>`
+        movieFigure.classList.add('swiper-slide');
+        movieFigure.dataset.id = movies.results[i].id;
+        swiper.append(movieFigure);
+        movieFigure.style.backgroundImage = `url(${myVars.get_img_url()}original${movies.results[i].backdrop_path})`;
+
+    }
     /**
     *   CHALLENGE: --Get Movies
     *       •Check if movies parameter is an object or string.
@@ -242,6 +261,28 @@ function setupSwipers(){
     var allSwipers = document.querySelector('.swiper-wrapper');
 
     allSwipers.childNodes.forEach(function(e){
+        e.addEventListener('mouseenter', function(e){
+            //console.log(e.target);
+            e.target.classList.add('hovered');
+            if(e.target.previousElementSibling){
+              e.target.previousElementSibling.classList.add('prev-hovered');
+            }
+            if(e.target.nextSibling){
+              e.target.nextSibling.classList.add('next-hovered');
+            }
+
+        });
+
+        e.addEventListener('mouseleave', function(e){
+            //console.log(e.target);
+            e.target.classList.remove('hovered');
+            if(e.target.previousElementSibling){
+              e.target.previousElementSibling.classList.remove('prev-hovered');
+            }
+            if(e.target.nextSibling){
+              e.target.nextSibling.classList.remove('next-hovered');
+            }
+        });
         /**
         *   CHALLENGE: --Event Listeners
         *       •One event listener for mouseenter
