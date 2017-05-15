@@ -109,6 +109,7 @@ function topRated(top){
 
   var randomMovie = Math.floor(Math.random()*top.results.length);
   var topMovie = top.results[randomMovie];
+  //console.log(topMovie);
   //console.log(myVars.get_img_url(), topMovie.backdrop_path);
 
   var featured = document.querySelector('.featured'),
@@ -188,6 +189,26 @@ function getMovies(movies){
 }
 
 
+function getMovieDetail(movie){
+  var movieDetail = document.querySelector('#detail');
+  movieDetail.style.backgroundImage = `url(${myVars.get_img_url()}original${movie.backdrop_path})`
+  movieDetail.classList.add('active');
+  movieDetail.innerHTML = `<div>
+      <h1>${movie.title}</h1>
+      <p><small>${movie.tagline}</small></p>
+      <div class="activeInfo"><span>83% Match</span> <span>${movie.release_date.substr(0, 4)}</span> <span>PG-13</span> <span>2h 31m</span></div>
+      <div class="activeMeta"><progress max="100" value="80"></progress> <span>23 of 151m</span></div>
+      <p>${movie.overview}</p>
+      <div class="activeRate"><button><i class="fa fa-plus"></i></button> MY LIST <button><i class="fa fa-thumbs-o-up"></i></button> <button><i class="fa fa-thumbs-o-down"></i></button></div>
+  </div>
+  <button class="selectionPlay"><i class="fa fa-play"></i></button>
+  <button class="selectionClose"><i class="fa fa-times"></i></button>`
+  var btnClose = document.querySelector('.selectionClose');
+  btnClose.addEventListener('click', function(e){
+    movieDetail.innerHTML = '';
+    movieDetail.classList.remove('active');
+  });
+}
 /**
 *   CHALLENGE: --Movie Detail
 *       •Write a function getMovieDetail that will process the object and output a detailed description of the selected movie
@@ -282,6 +303,13 @@ function setupSwipers(){
             if(e.target.nextSibling){
               e.target.nextSibling.classList.remove('next-hovered');
             }
+        });
+
+        e.addEventListener('click', function(e){
+          //console.log(this.dataset.id);
+          var movie = myVars.get_root_url() + 'movie/'+this.dataset.id+'?language=en-US&&api_key=' + myVars.get_v3auth();
+          getReq(movie, getMovieDetail);
+          //getMovieDetail = callback;
         });
         /**
         *   CHALLENGE: --Event Listeners
