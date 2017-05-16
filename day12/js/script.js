@@ -283,19 +283,20 @@ function setupSwipers(){
 
     allSwipers.childNodes.forEach(function(e){
         e.addEventListener('mouseenter', function(e){
-            //console.log(e.target);
-            e.target.classList.add('hovered');
-            if(e.target.previousElementSibling){
-              e.target.previousElementSibling.classList.add('prev-hovered');
-            }
-            if(e.target.nextSibling){
-              e.target.nextSibling.classList.add('next-hovered');
-            }
-
+            hover = setTimeout(function(){
+              e.target.classList.add('hovered');
+              if(e.target.previousElementSibling){
+                e.target.previousElementSibling.classList.add('prev-hovered');
+              }
+              if(e.target.nextSibling){
+                e.target.nextSibling.classList.add('next-hovered');
+              }
+            }, 500);
         });
 
         e.addEventListener('mouseleave', function(e){
             //console.log(e.target);
+            clearTimeout(hover);
             e.target.classList.remove('hovered');
             if(e.target.previousElementSibling){
               e.target.previousElementSibling.classList.remove('prev-hovered');
