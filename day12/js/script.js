@@ -66,8 +66,6 @@ function setVars(envs){
 
   //console.log(myVars.get_root_url(), myVars.get_img_url(), myVars.get_v3auth());
 
-  var test = 'https://api.themoviedb.org/3/movie/top_rated?api_key=6878886989b1485a2529a5c115745744&language=en-US&page=1';
-
   var topRatedMovies = myVars.get_root_url() + 'movie/top_rated?language=en-US&page=1&adult=false&api_key=' + myVars.get_v3auth();
   var popularMovies = myVars.get_root_url() + 'movie/popular?language=en-US&page=1&adult=false&api_key=' + myVars.get_v3auth();
 
